@@ -13,30 +13,26 @@ Citizen.CreateThread(function()
     ESX.PlayerData = ESX.GetPlayerData()
 end)
 
-AddEventHandler('onClientResourceStart', function(resourceName)
-    if GetCurrentResourceName() == resourceName then
+RegisterNetEvent('esx:playerLoaded')
+AddEventHandler('esx:playerLoaded', function(xPlayer)
+    Citizen.Wait(1000)
 
-        Citizen.Wait(1000)
+    SendNUIMessage({
+        type='display',
+        idjob=Config.enableIdJob,
+        watermark=Config.enableWaterMark,
+    })
 
-        SendNUIMessage({
-            type='display',
-            idjob=Config.enableIdJob,
-            watermark=Config.enableWaterMark,
-        })
+    ESX.PlayerData = xPlayer
 
-        while ESX.GetPlayerData().job == nil do
-            Citizen.Wait(10)
-        end
-
-        SendNUIMessage({
-            type='setData',
-            watermark=Config.watermarkText,
-            id=GetPlayerServerId(PlayerId()),
-            jobname=ESX.PlayerData.job.name,
-            job=ESX.PlayerData.job.label,
-            grade=ESX.PlayerData.job.grade_label
-        })
-    end
+    SendNUIMessage({
+        type='setData',
+        watermark=Config.watermarkText,
+        id=GetPlayerServerId(PlayerId()),
+        jobname=ESX.PlayerData.job.name,
+        job=ESX.PlayerData.job.label,
+        grade=ESX.PlayerData.job.grade_label
+    })
 end)
 
 RegisterNetEvent('esx:setJob')
